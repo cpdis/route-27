@@ -271,7 +271,8 @@ button:disabled { cursor: wait; }
   border: 1px solid var(--line); border-radius: 18px;
   background: var(--surface); padding: 18px 16px 14px;
 }
-.strip { position: relative; height: 34px; margin: 0 12px; }
+/* Insets keep the 30px bus inside the card padding: left = radius + the 9px "behind" nudge, right = radius. */
+.strip { position: relative; height: 34px; margin: 0 15px 0 24px; }
 .strip-line {
   position: absolute; left: 0; right: 0; top: 50%; height: 4px; margin-top: -2px;
   border-radius: 4px; background: var(--line); overflow: hidden;
@@ -310,7 +311,7 @@ button:disabled { cursor: wait; }
 .strip-bus.is-behind { transform: translateX(-9px); }
 @keyframes bus-ping { 0% { transform: scale(.85); opacity: .7; } 80%,100% { transform: scale(1.5); opacity: 0; } }
 .strip-labels {
-  display: flex; justify-content: space-between; gap: 12px; margin-top: 6px;
+  display: flex; justify-content: space-between; gap: 12px; margin: 6px 0 0 14px;
   font-size: 11px; color: var(--faint);
 }
 .strip-labels span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -365,7 +366,6 @@ button:disabled { cursor: wait; }
 
 @media (max-width:390px){
   .tracker-card { padding: 16px 13px 12px; }
-  .strip { margin: 0 10px; }
 }
 @media (hover:hover) and (pointer:fine) {
   .alert-close:hover { color: var(--ink); }
