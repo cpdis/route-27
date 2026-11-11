@@ -1,0 +1,250 @@
+{
+ "result": "success",
+ "stop": {
+  "Code": "10091",
+  "DataSet": "PerthRestricted",
+  "Description": "St Georges Tce Stand 32 - Cat Id 21",
+  "Latitude": "-31.95342",
+  "Longitude": "115.852218",
+  "StopUid": "PerthRestricted:10091",
+  "Zone": "1"
+ },
+ "trips": [
+  {
+   "ArriveTime": "2026-11-11T23:50",
+   "DepartTime": "2026-11-11T23:50",
+   "Destination": {
+    "Code": "28527",
+    "Name": "Claremont Stn Stand 4",
+    "ParentName": "Claremont Stn",
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:28527",
+    "TripStopSourceId": null
+   },
+   "DisplayRouteCode": "27",
+   "DisplayTripDescription": "Departs from Stop 10091",
+   "DisplayTripStatus": "12:02am",
+   "DisplayTripStatusCountDown": "12 MIN",
+   "DisplayTripTitle": "To Claremont Stn",
+   "IsRealTime": true,
+   "IsTimingPoint": false,
+   "Origin": {
+    "Code": "28001",
+    "Name": "Terrace Rd Before Hill St",
+    "ParentName": null,
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:28001",
+    "TripStopSourceId": null
+   },
+   "RealTimeInfo": {
+    "EstimatedDepartureTime": "00:02:30",
+    "IsCancelled": false
+   },
+   "RealTimeStopStatus": 2,
+   "RealTimeStopStatusDetail": "12 min delay",
+   "SequenceNumber": "7",
+   "StopTimetableStop": {
+    "Code": "10091",
+    "Name": "St Georges Tce Stand 32 - Cat Id 21",
+    "ParentName": null,
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:10091",
+    "TripStopSourceId": null
+   },
+   "Summary": {
+    "Direction": "1",
+    "DisplayTripCommentNote": null,
+    "DisplayTripNote": null,
+    "Headsign": "Claremont Stn",
+    "Mode": "Bus",
+    "NoteIds": [],
+    "Polyline": null,
+    "RealTimeInfo": {
+     "CurrentBearing": 250,
+     "CurrentPosition": "-31.9567 115.8629",
+     "FleetNumber": "2601",
+     "LastUpdated": "2026-11-11T23:49",
+     "IsCancelled": false
+    },
+    "RouteCode": "27",
+    "RouteName": "",
+    "RouteSourceId": "SWA-CLA-1646",
+    "RouteUid": "PerthRestricted:SWA-CLA-1646",
+    "ServiceProvider": {
+     "Code": "PerthRestricted:SWA-CLA",
+     "LastUpdated": "0001-01-01T00:00:00",
+     "Name": "Transperth",
+     "PhoneNumber": "",
+     "ServiceProviderUid": "PerthRestricted:SWA-CLA",
+     "TimeZone": "Australia/Perth",
+     "Url": "http://www.transperth.wa.gov.au"
+    },
+    "TripCode": null,
+    "TripSourceId": "7413001",
+    "TripStartTime": "2026-11-11T23:44",
+    "TripUid": "PerthRestricted:7413001"
+   },
+   "TimingInfoType": 0,
+   "VehicleInfoId": null
+  },
+  {
+   "ArriveTime": "2026-11-11T13:41",
+   "DepartTime": "2026-11-11T13:41",
+   "Destination": {
+    "Code": "19438",
+    "Name": "Lemnos St Before Bedbrook Pl",
+    "ParentName": null,
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:19438",
+    "TripStopSourceId": null
+   },
+   "DisplayRouteCode": "27",
+   "DisplayTripDescription": "Departs from Stop 10091",
+   "DisplayTripStatus": "1:42pm",
+   "DisplayTripStatusCountDown": "20 MIN",
+   "DisplayTripTitle": "To Shenton Park",
+   "IsRealTime": true,
+   "IsTimingPoint": false,
+   "Origin": {
+    "Code": "28001",
+    "Name": "Terrace Rd Before Hill St",
+    "ParentName": null,
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:28001",
+    "TripStopSourceId": null
+   },
+   "RealTimeInfo": {
+    "EstimatedArrivalTime": "13:42:35",
+    "EstimatedDepartureTime": "13:42:50",
+    "IsCancelled": false
+   },
+   "RealTimeStopStatus": 2,
+   "RealTimeStopStatusDetail": "1 min delay",
+   "SequenceNumber": "7",
+   "StopTimetableStop": {
+    "Code": "10091",
+    "Name": "St Georges Tce Stand 32 - Cat Id 21",
+    "ParentName": null,
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:10091",
+    "TripStopSourceId": null
+   },
+   "Summary": {
+    "Direction": "1",
+    "DisplayTripCommentNote": null,
+    "DisplayTripNote": "Deviates",
+    "Headsign": "Shenton Park",
+    "Mode": "Bus",
+    "NoteIds": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "Polyline": null,
+    "RealTimeInfo": {
+     "CurrentBearing": 70,
+     "CurrentPosition": "-31.9567050933838 115.862907409668",
+     "FleetNumber": "2571",
+     "LastUpdated": "2026-11-11T13:21",
+     "IsCancelled": false
+    },
+    "RouteCode": "27",
+    "RouteName": "",
+    "RouteSourceId": "SWA-CLA-1646",
+    "RouteUid": "PerthRestricted:SWA-CLA-1646",
+    "ServiceProvider": {
+     "Code": "PerthRestricted:SWA-CLA",
+     "LastUpdated": "0001-01-01T00:00:00",
+     "Name": "Transperth",
+     "PhoneNumber": "",
+     "ServiceProviderUid": "PerthRestricted:SWA-CLA",
+     "TimeZone": "Australia/Perth",
+     "Url": "http://www.transperth.wa.gov.au"
+    },
+    "TripCode": null,
+    "TripSourceId": "7413922",
+    "TripStartTime": "2026-11-11T13:35",
+    "TripUid": "PerthRestricted:7413922"
+   },
+   "TimingInfoType": 0,
+   "VehicleInfoId": null
+  },
+  {
+   "ArriveTime": "2026-11-11T14:11",
+   "DepartTime": "2026-11-11T14:11",
+   "Destination": {
+    "Code": "28527",
+    "Name": "Claremont Stn Stand 4",
+    "ParentName": "Claremont Stn",
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:28527",
+    "TripStopSourceId": null
+   },
+   "DisplayRouteCode": "27",
+   "DisplayTripDescription": "Departs from Stop 10091",
+   "DisplayTripStatus": "2:11pm",
+   "DisplayTripStatusCountDown": "50 MIN",
+   "DisplayTripTitle": "To Claremont Stn",
+   "IsRealTime": true,
+   "IsTimingPoint": false,
+   "Origin": {
+    "Code": "28001",
+    "Name": "Terrace Rd Before Hill St",
+    "ParentName": null,
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:28001",
+    "TripStopSourceId": null
+   },
+   "RealTimeInfo": {
+    "EstimatedDepartureTime": null,
+    "IsCancelled": true
+   },
+   "RealTimeStopStatus": 4,
+   "RealTimeStopStatusDetail": "Cancelled",
+   "SequenceNumber": "7",
+   "StopTimetableStop": {
+    "Code": "10091",
+    "Name": "St Georges Tce Stand 32 - Cat Id 21",
+    "ParentName": null,
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:10091",
+    "TripStopSourceId": null
+   },
+   "Summary": {
+    "Direction": "1",
+    "DisplayTripCommentNote": null,
+    "DisplayTripNote": null,
+    "Headsign": "Claremont Stn",
+    "Mode": "Bus",
+    "NoteIds": [],
+    "Polyline": null,
+    "RealTimeInfo": {
+     "CurrentBearing": null,
+     "CurrentPosition": "",
+     "IsCancelled": true
+    },
+    "RouteCode": "27",
+    "RouteName": "",
+    "RouteSourceId": "SWA-CLA-1646",
+    "RouteUid": "PerthRestricted:SWA-CLA-1646",
+    "ServiceProvider": {
+     "Code": "PerthRestricted:SWA-CLA",
+     "LastUpdated": "0001-01-01T00:00:00",
+     "Name": "Transperth",
+     "PhoneNumber": "",
+     "ServiceProviderUid": "PerthRestricted:SWA-CLA",
+     "TimeZone": "Australia/Perth",
+     "Url": "http://www.transperth.wa.gov.au"
+    },
+    "TripCode": null,
+    "TripSourceId": "7413889",
+    "TripStartTime": "2026-11-11T14:05",
+    "TripUid": "PerthRestricted:7413889"
+   },
+   "TimingInfoType": 0,
+   "VehicleInfoId": null
+  }
+ ]
+}

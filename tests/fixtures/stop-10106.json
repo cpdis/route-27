@@ -1,0 +1,263 @@
+{
+ "result": "success",
+ "stop": {
+  "Bearing": null,
+  "Code": "10106",
+  "DataSet": "PerthRestricted",
+  "Description": "Bagot Rd Before Rowland St",
+  "IsParent": false,
+  "Latitude": "-31.9503606",
+  "Longitude": "115.8224956",
+  "ParentName": null,
+  "ParentUid": null,
+  "Position": "-31.9503606, 115.8224956",
+  "Routes": "PerthRestricted:SWA-CLA-1646",
+  "StopUid": "PerthRestricted:10106",
+  "SupportedModeUids": null,
+  "SupportedModes": "Bus",
+  "WheelchairAccessible": 0,
+  "Zone": "1"
+ },
+ "trips": [
+  {
+   "ArriveTime": "2026-11-11T13:36",
+   "DepartTime": "2026-11-11T13:36",
+   "Destination": {
+    "Code": "28001",
+    "Name": "Terrace Rd Before Hill St",
+    "ParentName": null,
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:28001",
+    "TripStopSourceId": null
+   },
+   "DisplayRouteCode": "27",
+   "DisplayTripDescription": "Departs from Stop 10106",
+   "DisplayTripStatus": "1:36pm",
+   "DisplayTripStatusCountDown": "15 MIN",
+   "DisplayTripTitle": "To East Perth",
+   "IsRealTime": true,
+   "IsTimingPoint": false,
+   "Origin": {
+    "Code": "19442",
+    "Name": "Lemnos St Shenton Park",
+    "ParentName": null,
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:19442",
+    "TripStopSourceId": null
+   },
+   "RealTimeInfo": {
+    "ActualArrivalTime": null,
+    "ActualDepartureTime": null,
+    "CancellationCode": null,
+    "EstimatedArrivalTime": "13:36:01",
+    "EstimatedDepartureTime": "13:36:15",
+    "IsCancelled": false,
+    "LateRunningCode": null,
+    "Platform": null,
+    "RealTimeTripStatus": 1
+   },
+   "RealTimeStopStatus": 1,
+   "RealTimeStopStatusDetail": "On Time",
+   "SequenceNumber": "11",
+   "StopTimetableStop": {
+    "Code": "10106",
+    "Name": "Bagot Rd Before Rowland St",
+    "ParentName": null,
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:10106",
+    "TripStopSourceId": null
+   },
+   "Summary": {
+    "Direction": "0",
+    "DisplayTripCommentNote": null,
+    "DisplayTripNote": "Deviates",
+    "Headsign": "East Perth",
+    "Mode": "Bus",
+    "NoteIds": [
+     2,
+     4,
+     562,
+     850,
+     1271
+    ],
+    "Polyline": null,
+    "RealTimeInfo": {
+     "CurrentBearing": 51,
+     "CurrentPosition": "-31.9568061828613 115.796783447266",
+     "FleetNumber": "2584",
+     "Headsign": null,
+     "IsCancelled": false,
+     "IsDelayed": false,
+     "LastCallTripStopSourceId": null,
+     "LastUpdated": "2026-11-11T13:20",
+     "NumCars": 0,
+     "RealTimeDataSource": null,
+     "Series": null,
+     "VehicleAccessInfo": null,
+     "VehicleId": "SWA-CLA-2584",
+     "WheelchairAccessible": 0
+    },
+    "RouteCode": "27",
+    "RouteName": "",
+    "RouteSourceId": "SWA-CLA-1646",
+    "RouteUid": "PerthRestricted:SWA-CLA-1646",
+    "ServiceProvider": {
+     "Code": "PerthRestricted:SWA-CLA",
+     "LastUpdated": "0001-01-01T00:00:00",
+     "Name": "Transperth",
+     "PhoneNumber": "",
+     "ServiceProviderUid": "PerthRestricted:SWA-CLA",
+     "TimeZone": "Australia/Perth",
+     "Url": "http://www.transperth.wa.gov.au"
+    },
+    "TripCode": null,
+    "TripSourceId": "7413982",
+    "TripStartTime": "2026-11-11T13:30",
+    "TripUid": "PerthRestricted:7413982"
+   },
+   "TimingInfoType": 0,
+   "VehicleInfoId": null
+  },
+  {
+   "ArriveTime": "2026-11-11T14:06",
+   "DepartTime": "2026-11-11T14:06",
+   "Destination": {
+    "Code": "28001",
+    "Name": "Terrace Rd Before Hill St",
+    "ParentName": null,
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:28001",
+    "TripStopSourceId": null
+   },
+   "DisplayRouteCode": "27",
+   "DisplayTripDescription": "Departs from Stop 10106",
+   "DisplayTripStatus": "2:06pm",
+   "DisplayTripStatusCountDown": "45 MIN",
+   "DisplayTripTitle": "To East Perth",
+   "IsRealTime": false,
+   "IsTimingPoint": false,
+   "Origin": {
+    "Code": "28527",
+    "Name": "Claremont Stn Stand 4",
+    "ParentName": "Claremont Stn",
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:28527",
+    "TripStopSourceId": null
+   },
+   "RealTimeInfo": null,
+   "RealTimeStopStatus": -1,
+   "RealTimeStopStatusDetail": "Not Available",
+   "SequenceNumber": "33",
+   "StopTimetableStop": {
+    "Code": "10106",
+    "Name": "Bagot Rd Before Rowland St",
+    "ParentName": null,
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:10106",
+    "TripStopSourceId": null
+   },
+   "Summary": {
+    "Direction": "0",
+    "DisplayTripCommentNote": null,
+    "DisplayTripNote": null,
+    "Headsign": "East Perth",
+    "Mode": "Bus",
+    "NoteIds": [
+     4,
+     167,
+     850,
+     1271
+    ],
+    "Polyline": null,
+    "RealTimeInfo": null,
+    "RouteCode": "27",
+    "RouteName": "",
+    "RouteSourceId": "SWA-CLA-1646",
+    "RouteUid": "PerthRestricted:SWA-CLA-1646",
+    "ServiceProvider": {
+     "Code": "PerthRestricted:SWA-CLA",
+     "LastUpdated": "0001-01-01T00:00:00",
+     "Name": "Transperth",
+     "PhoneNumber": "",
+     "ServiceProviderUid": "PerthRestricted:SWA-CLA",
+     "TimeZone": "Australia/Perth",
+     "Url": "http://www.transperth.wa.gov.au"
+    },
+    "TripCode": null,
+    "TripSourceId": "7413967",
+    "TripStartTime": "2026-11-11T13:45",
+    "TripUid": "PerthRestricted:7413967"
+   },
+   "TimingInfoType": 0,
+   "VehicleInfoId": null
+  },
+  {
+   "ArriveTime": "2026-11-11T13:40",
+   "DepartTime": "2026-11-11T13:40",
+   "Destination": {
+    "Code": "27172",
+    "Name": "Perth Busport Zone B",
+    "ParentName": null,
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:27172",
+    "TripStopSourceId": null
+   },
+   "DisplayRouteCode": "402",
+   "DisplayTripDescription": "Departs from Stop 10106",
+   "DisplayTripStatus": "1:40pm",
+   "DisplayTripStatusCountDown": "19 MIN",
+   "DisplayTripTitle": "To Perth Busport",
+   "IsRealTime": false,
+   "IsTimingPoint": false,
+   "Origin": {
+    "Code": "11538",
+    "Name": "Stirling Stn Stand 2",
+    "ParentName": null,
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:11538",
+    "TripStopSourceId": null
+   },
+   "RealTimeInfo": null,
+   "RealTimeStopStatus": -1,
+   "RealTimeStopStatusDetail": "Not Available",
+   "SequenceNumber": "20",
+   "StopTimetableStop": {
+    "Code": "10106",
+    "Name": "Bagot Rd Before Rowland St",
+    "ParentName": null,
+    "ParentUid": null,
+    "StopUid": "PerthRestricted:10106",
+    "TripStopSourceId": null
+   },
+   "Summary": {
+    "Direction": "0",
+    "DisplayTripCommentNote": null,
+    "DisplayTripNote": null,
+    "Headsign": "Perth Busport",
+    "Mode": "Bus",
+    "NoteIds": [],
+    "Polyline": null,
+    "RealTimeInfo": null,
+    "RouteCode": "402",
+    "RouteName": "",
+    "RouteSourceId": "SWA-CLA-1646",
+    "RouteUid": "PerthRestricted:SWA-CLA-1646",
+    "ServiceProvider": {
+     "Code": "PerthRestricted:SWA-CLA",
+     "LastUpdated": "0001-01-01T00:00:00",
+     "Name": "Transperth",
+     "PhoneNumber": "",
+     "ServiceProviderUid": "PerthRestricted:SWA-CLA",
+     "TimeZone": "Australia/Perth",
+     "Url": "http://www.transperth.wa.gov.au"
+    },
+    "TripCode": null,
+    "TripSourceId": "6974136",
+    "TripStartTime": "2026-11-11T13:05",
+    "TripUid": "PerthRestricted:6974136"
+   },
+   "TimingInfoType": 0,
+   "VehicleInfoId": null
+  }
+ ]
+}

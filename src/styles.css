@@ -212,3 +212,134 @@ button:disabled { cursor: wait; }
 @media (prefers-reduced-motion:reduce) {
   .stop-option,.refresh-button {transition:none;}
 }
+/* ---- Leave-by cue (inside the hero) ---- */
+.leave {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin: -8px 0 18px; padding: 9px 12px;
+  border-radius: 12px; background: rgba(255,255,255,.13);
+  color: #fff; font-size: 14px; line-height: 1.3;
+}
+.leave svg { flex: none; color: #a5ffc9; }
+.leave strong { font-weight: 760; letter-spacing: -.015em; }
+.leave-sub { color: #cdeee0; font-size: 12px; }
+.leave.is-urgent { background: rgba(255,214,120,.22); }
+.leave.is-urgent svg { color: #ffd98a; }
+.leave.is-missed { background: rgba(0,0,0,.14); }
+.leave.is-missed svg { color: #d6e9de; }
+
+/* ---- Service notices ---- */
+.alerts { display: grid; gap: 8px; margin: 0 0 12px; }
+.alerts.is-upcoming { margin: 0; }
+.alert {
+  display: flex; align-items: flex-start; gap: 10px;
+  border: 1px solid var(--line); border-radius: 13px;
+  padding: 10px 8px 10px 13px; background: var(--surface);
+}
+.alert.is-active { border-color: #d3a357; background: #fff7e9; color: #704c14; }
+@media (prefers-color-scheme: dark) {
+  .alert.is-active { background: #332b1e; border-color: #6b5533; color: #f0d9ac; }
+}
+.alert-main { min-width: 0; flex: 1; }
+.alert-label { display: block; font-size: 10px; font-weight: 780; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.alert.is-active .alert-label { color: inherit; opacity: .8; }
+.alert-title { display: block; margin-top: 3px; font-size: 13px; font-weight: 700; line-height: 1.35; text-decoration: none; overflow-wrap: anywhere; }
+.alert-close {
+  flex: none; width: 32px; height: 32px; display: grid; place-items: center;
+  border: 0; background: transparent; border-radius: 9px; color: var(--muted);
+}
+
+/* ---- Where's the bus ---- */
+.tracker { margin-top: 4px; }
+.section-note.is-live { color: var(--accent); }
+.tracker-card {
+  border: 1px solid var(--line); border-radius: 18px;
+  background: var(--surface); padding: 18px 16px 14px;
+}
+.strip { position: relative; height: 34px; margin: 0 12px; }
+.strip-line {
+  position: absolute; left: 0; right: 0; top: 50%; height: 4px; margin-top: -2px;
+  border-radius: 4px; background: var(--line); overflow: hidden;
+}
+.strip-done { height: 100%; background: var(--accent); opacity: .45; border-radius: 4px; transition: width 600ms cubic-bezier(.23,1,.32,1); }
+.strip-stop {
+  position: absolute; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px;
+  border-radius: 50%; background: var(--surface); border: 2px solid var(--faint);
+}
+.strip-stop.is-passed { border-color: var(--accent); background: var(--accent); opacity: .55; }
+.strip-stop.is-yours {
+  width: 18px; height: 18px; margin: -9px 0 0 -9px;
+  border: 3px solid var(--accent); background: var(--surface);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.strip-bus {
+  position: absolute; top: 50%; width: 30px; height: 30px; margin: -15px 0 0 -15px;
+  display: grid; place-items: center; border-radius: 50%;
+  background: var(--ink); color: var(--bg);
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+  transition: left 600ms cubic-bezier(.23,1,.32,1);
+}
+.strip-bus.is-gps { background: #087b5b; color: #fff; }
+.strip-bus.is-gps::after {
+  content: ""; position: absolute; inset: -4px; border-radius: 50%;
+  border: 2px solid #0b9e72; opacity: 0; animation: bus-ping 2.4s ease-out infinite;
+}
+.strip-bus.is-behind { margin-left: -24px; }
+@keyframes bus-ping { 0% { transform: scale(.85); opacity: .7; } 80%,100% { transform: scale(1.5); opacity: 0; } }
+.strip-labels {
+  display: flex; justify-content: space-between; gap: 12px; margin-top: 6px;
+  font-size: 11px; color: var(--faint);
+}
+.strip-labels span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.strip-yours { color: var(--accent); font-weight: 700; white-space: nowrap; }
+.tracker-summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line);
+}
+.tracker-headline { display: block; font-size: 16px; font-weight: 760; letter-spacing: -.025em; }
+.tracker-detail { margin: 3px 0 0; font-size: 12px; color: var(--muted); line-height: 1.4; }
+.map-toggle {
+  flex: none; min-width: 64px; height: 36px; padding: 0 14px;
+  border: 1px solid var(--line); border-radius: 11px; background: var(--subtle);
+  font-size: 13px; font-weight: 700; color: var(--accent);
+}
+.route-map {
+  height: 280px; margin-top: 12px; border-radius: 13px; overflow: hidden;
+  border: 1px solid var(--line); background: var(--subtle);
+  z-index: 0; isolation: isolate;
+}
+.route-map.is-loading { display: grid; place-items: center; color: var(--muted); font-size: 13px; }
+.route-map .leaflet-control-attribution { font-size: 9px; }
+.map-bus { position: relative; }
+.map-bus-dot {
+  position: absolute; inset: 3px; display: grid; place-items: center;
+  border-radius: 50%; background: #087b5b; color: #fff; border: 2px solid #fff;
+  font: 800 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Arial,sans-serif;
+  letter-spacing: -.04em; box-shadow: 0 2px 8px rgba(0,0,0,.3);
+}
+.map-bus.is-estimated .map-bus-dot { background: #607167; }
+.map-bus-arrow {
+  position: absolute; inset: -7px; pointer-events: none;
+}
+.map-bus-arrow::before {
+  content: ""; position: absolute; left: 50%; top: 0; margin-left: -5px;
+  border: 5px solid transparent; border-bottom: 8px solid #087b5b; border-top: 0;
+}
+
+/* ---- Cancelled rows ---- */
+.departure-row.is-cancelled .row-count-num,
+.departure-row.is-cancelled .row-time { text-decoration: line-through; color: var(--faint); }
+.row-cancelled { color: #b3412f; font-weight: 750; }
+@media (prefers-color-scheme: dark) { .row-cancelled { color: #ff9c8a; } }
+
+@media (max-width:390px){
+  .tracker-card { padding: 16px 13px 12px; }
+  .strip { margin: 0 10px; }
+}
+@media (hover:hover) and (pointer:fine) {
+  .map-toggle:hover, .alert-close:hover { color: var(--ink); }
+  .alert-title:hover { text-decoration: underline; text-underline-offset: 2px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .strip-done, .strip-bus { transition: none; }
+  .strip-bus.is-gps::after { animation: none; }
+}
