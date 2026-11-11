@@ -53,7 +53,7 @@ export default function AlertBanner({ alerts, onDismiss, variant }: {
   return (
     <section aria-labelledby="notices-title">
       <div className="section-heading">
-        <h2 id="notices-title" className="section-title">Coming up</h2>
+        <h2 id="notices-title" className="section-title is-triangle">Coming up</h2>
         <span className="section-note">TRANSPERTH NOTICES</span>
       </div>
       {list}

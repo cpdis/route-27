@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   clockNear, parseStopTimetable, parseTrip, readDepartures, readTrip, resetForTests, tokenFromPage, toIsoLocal,
 } from "../lib/transperth";
@@ -131,7 +131,13 @@ describe("tokenFromPage", () => {
 });
 
 describe("upstream calls", () => {
+  // The fixtures are a snapshot from 11 Nov 2026; pin the clock there so their buses are still to come.
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-11-11T13:21:30+08:00"));
+  });
   afterEach(() => {
+    vi.useRealTimers();
     vi.unstubAllGlobals();
     resetForTests();
   });

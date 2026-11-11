@@ -233,7 +233,7 @@ export default function App() {
 
         <section aria-labelledby="upcoming-title">
           <div className="section-heading">
-            <h2 id="upcoming-title" className="section-title">Following departures</h2>
+            <h2 id="upcoming-title" className="section-title is-square">Following departures</h2>
             <span className="section-note">PERTH LOCAL TIME</span>
           </div>
           {following.length > 0 ? (

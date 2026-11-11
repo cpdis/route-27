@@ -1,7 +1,7 @@
 // Route 27 offline shell. Pages: network first, cached copy without signal.
 // Hashed build assets: cache first. API calls are never cached here; the page
 // keeps its own last-good departures in localStorage.
-const VERSION = "route27-v3";
+const VERSION = "route27-v4";
 const SHELL = ["/", "/icon.svg", "/apple-touch-icon.png", "/manifest.webmanifest"];
 
 self.addEventListener("install", event => {

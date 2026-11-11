@@ -73,7 +73,7 @@ export default function RouteStrip({ trip, departure, stopCode, now, stale }: {
   return (
     <section className="tracker" aria-labelledby="tracker-title">
       <div className="section-heading">
-        <h2 id="tracker-title" className="section-title">Where's the bus</h2>
+        <h2 id="tracker-title" className="section-title is-circle">Where's the bus</h2>
         <span className={"section-note" + (progress.source === "gps" && !stale ? " is-live" : "")}>{note}</span>
       </div>
       <div className="tracker-card">

@@ -71,18 +71,20 @@ export default function RouteMap({ trip, progress, vehicle }: {
       dragging: !L.Browser.mobile,
     });
     tileLayer(prefersDark()).addTo(m);
-    const accent = cssVar("--accent", "#087954");
-    const faint = cssVar("--faint", "#87968d");
+    const blue = cssVar("--blue", "#1a4fd6");
+    const ink = cssVar("--ink", "#000");
+    const yellow = cssVar("--yellow", "#ffd400");
+    const faint = cssVar("--faint", "#8a8a8a");
     const line = trip.stops.map(s => [s.lat, s.lon] as L.LatLngTuple);
-    L.polyline(line.slice(0, progress.target + 1), { color: accent, weight: 5, opacity: 0.85 }).addTo(m);
+    L.polyline(line.slice(0, progress.target + 1), { color: blue, weight: 5, opacity: 1 }).addTo(m);
     L.polyline(line.slice(progress.target), { color: faint, weight: 3, opacity: 0.6, dashArray: "4 6" }).addTo(m);
     trip.stops.forEach((s, i) => {
       const yours = i === progress.target;
       L.circleMarker([s.lat, s.lon], {
         radius: yours ? 7 : 3.5,
-        color: yours ? accent : faint,
+        color: yours ? ink : i < progress.target ? blue : faint,
         weight: yours ? 3 : 1.5,
-        fillColor: yours ? "#fff" : cssVar("--surface", "#fff"),
+        fillColor: yours ? yellow : cssVar("--surface", "#fff"),
         fillOpacity: 1,
       }).bindTooltip(shortStopName(s.name) + (yours ? " · your stop" : ""), { direction: "top", offset: [0, -6] }).addTo(m);
     });
