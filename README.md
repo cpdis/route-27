@@ -22,7 +22,7 @@ device and can be linked with `?stop=10106` or `?stop=10091`.
   one after.
 - **Where's the bus**: the next bus on a strip of the stops before yours, from its live GPS
   when Transperth has a recent fix on the route, otherwise estimated from the timetable. A
-  **Map** button opens the same on an OpenStreetMap/CARTO map (Leaflet, loaded on demand).
+  **Map** button opens the same on an OpenStreetMap map (Leaflet, loaded on demand).
 - **Notices** from Transperth's Service Updates page that name route 27: current ones above
   the next bus, upcoming ones further down. Each can be dismissed on the device.
 - **Following departures**, with cancelled services struck through.
@@ -68,6 +68,11 @@ npm run dev:mock   # same UI on recorded fixtures, with a bus that moves along t
 npm run check      # typecheck, tests, production build
 ```
 
+Map tiles are the standard OpenStreetMap tiles, greyed out with a CSS filter. Set
+`VITE_CARTO_KEY` (in Vercel's environment variables, then redeploy) to use CARTO's light and
+dark basemaps instead; CARTO has required a key since September 2026, free for personal use
+at [carto.com/basemaps/apikey](https://carto.com/basemaps/apikey/).
+
 `dev:mock` takes `MOCK_LEAD` (minutes until the bus reaches your stop, default 7; try 3 for
 the "too tight" cue), `MOCK_DELAY` (default 2) and `MOCK_FAIL=1` (every API call fails).
 
@@ -100,5 +105,5 @@ re-enable it from the Actions tab if that happens.
 
 The Transperth API integration uses patterns documented in the MIT-licensed
 [aiotransperth](https://github.com/Chris112/aiotransperth) project. The original board design
-is Owen Christofferson's Grand & Perkins Board on Val Town. Map data © OpenStreetMap
-contributors, tiles © CARTO.
+is Owen Christofferson's Grand & Perkins Board on Val Town. Map data and tiles ©
+OpenStreetMap contributors.

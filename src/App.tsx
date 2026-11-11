@@ -264,7 +264,7 @@ export default function App() {
           </div>
           <p className="footer-disclosure">
             Live = vehicle-tracked estimate. Scheduled = timetable only. Times may change.
-            Independent display using public Transperth data. Map © OpenStreetMap contributors, © CARTO.
+            Independent display using public Transperth data. Map © OpenStreetMap contributors.
           </p>
         </footer>
       </main>

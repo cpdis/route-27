@@ -309,6 +309,11 @@ button:disabled { cursor: wait; }
 }
 .route-map.is-loading { display: grid; place-items: center; color: var(--muted); font-size: 13px; }
 .route-map .leaflet-control-attribution { font-size: 9px; }
+/* Standard OSM tiles are busy and only come in light; quieten them so the route reads first. */
+.route-map.is-osm .leaflet-tile-pane { filter: grayscale(1) brightness(1.06) contrast(.82); }
+@media (prefers-color-scheme: dark) {
+  .route-map.is-osm .leaflet-tile-pane { filter: grayscale(1) invert(1) brightness(.92) contrast(.78); }
+}
 .map-bus { position: relative; }
 .map-bus-dot {
   position: absolute; inset: 3px; display: grid; place-items: center;

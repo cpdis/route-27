@@ -4,11 +4,22 @@ import "leaflet/dist/leaflet.css";
 import type { TripPayload, Vehicle } from "../../lib/transperth";
 import { shortStopName, type Progress } from "../lib/progress";
 
-const TILES = {
-  light: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-  dark: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-};
-const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+// CARTO's raster tiles need a key since 25 Sep 2026 (free for personal use up to 5M tiles a
+// month; request one at carto.com/basemaps/apikey). Without one, fall back to the standard
+// OpenStreetMap tiles, toned down with a CSS filter (see .route-map.is-osm in styles.css).
+const CARTO_KEY: string = import.meta.env.VITE_CARTO_KEY ?? "";
+const OSM_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+
+function tileLayer(dark: boolean): L.TileLayer {
+  if (CARTO_KEY) {
+    return L.tileLayer(
+      `https://basemaps.cartocdn.com/rastertiles/${dark ? "dark_all" : "light_all"}/{z}/{x}/{y}{r}.png?key=${encodeURIComponent(CARTO_KEY)}`,
+      { attribution: OSM_ATTRIBUTION + ' &copy; <a href="https://carto.com/attributions">CARTO</a>', maxZoom: 19, detectRetina: true },
+    );
+  }
+  // OSM has no @2x tiles; detectRetina would fetch four times the tiles at unreadable label sizes.
+  return L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: OSM_ATTRIBUTION, maxZoom: 19 });
+}
 
 function prefersDark(): boolean {
   return typeof matchMedia === "function" && matchMedia("(prefers-color-scheme: dark)").matches;
@@ -59,9 +70,7 @@ export default function RouteMap({ trip, progress, vehicle }: {
       // On phones a one-finger drag scrolls the page; pinch still zooms.
       dragging: !L.Browser.mobile,
     });
-    L.tileLayer(prefersDark() ? TILES.dark : TILES.light, {
-      attribution: ATTRIBUTION, subdomains: "abcd", maxZoom: 19, detectRetina: true,
-    }).addTo(m);
+    tileLayer(prefersDark()).addTo(m);
     const accent = cssVar("--accent", "#087954");
     const faint = cssVar("--faint", "#87968d");
     const line = trip.stops.map(s => [s.lat, s.lon] as L.LatLngTuple);
@@ -108,5 +117,5 @@ export default function RouteMap({ trip, progress, vehicle }: {
     }
   }, [trip, progress.position, progress.target, vehicle]);
 
-  return <div ref={node} className="route-map" role="region" aria-label="Map of the bus and your stop" />;
+  return <div ref={node} className={"route-map" + (CARTO_KEY ? "" : " is-osm")} role="region" aria-label="Map of the bus and your stop" />;
 }
