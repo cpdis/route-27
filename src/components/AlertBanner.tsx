@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { AlertsPayload } from "../../lib/alerts";
 import { shortDay } from "../lib/format";
 
@@ -21,12 +22,18 @@ export function cleanTitle(title: string): string {
 export default function AlertBanner({ alerts, onDismiss, variant }: {
   alerts: Alert[]; onDismiss: (id: string) => void; variant: "active" | "upcoming";
 }) {
+  const [leaving, setLeaving] = useState<string[]>([]);
   const shown = alerts.filter(a => (variant === "active" ? a.active : !a.active)).slice(0, 3);
   if (shown.length === 0) return null;
+  // Let the exit transition (150 ms) play before the notice leaves the list.
+  const close = (id: string) => {
+    setLeaving(prev => [...prev, id]);
+    window.setTimeout(() => onDismiss(id), 150);
+  };
   const list = (
     <div className={"alerts is-" + variant}>
       {shown.map(alert => (
-        <aside key={alert.id} className={"alert" + (alert.active ? " is-active" : "")}>
+        <aside key={alert.id} className={"alert" + (alert.active ? " is-active" : "") + (leaving.includes(alert.id) ? " is-leaving" : "")}>
           <div className="alert-main">
             <span className="alert-label">
               {alert.active ? "Now" : alert.kind === "change" ? "Service change" : "Disruption"}
@@ -34,7 +41,7 @@ export default function AlertBanner({ alerts, onDismiss, variant }: {
             </span>
             <a className="alert-title" href={alert.url} target="_blank" rel="noopener noreferrer">{cleanTitle(alert.title)} ↗</a>
           </div>
-          <button type="button" className="alert-close" aria-label={"Dismiss " + cleanTitle(alert.title)} onClick={() => onDismiss(alert.id)}>
+          <button type="button" className="alert-close" aria-label={"Dismiss " + cleanTitle(alert.title)} onClick={() => close(alert.id)}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
               strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
           </button>

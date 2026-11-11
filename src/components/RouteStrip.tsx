@@ -62,6 +62,7 @@ export default function RouteStrip({ trip, departure, stopCode, now, stale }: {
   const pct = (index: number) => Math.min(100, Math.max(0, ((index - start) / span) * 100));
   const busPct = progress.position < start ? 0 : pct(progress.position);
   const behind = progress.position < start;
+  const gps = progress.source === "gps";
   const { headline, detail } = describe(progress, trip, departure);
   const fleet = departure.vehicle?.fleet ? "Bus " + departure.vehicle.fleet + " · " : "";
   const note = stale ? "Old data"
@@ -76,18 +77,21 @@ export default function RouteStrip({ trip, departure, stopCode, now, stale }: {
         <span className={"section-note" + (progress.source === "gps" && !stale ? " is-live" : "")}>{note}</span>
       </div>
       <div className="tracker-card">
-        <div className="strip" role="img" aria-label={`${headline}. ${detail}`}>
+        {/* Keyed by trip so a new bus starts in place instead of sliding over from the last one. */}
+        <div className="strip" key={trip.tripUid} role="img" aria-label={`${headline}. ${detail}`}>
           <div className="strip-line">
-            <div className="strip-done" style={{ width: busPct + "%" }} />
+            <div className="strip-done" style={{ transform: `translateX(${busPct - 100}%)` }} />
           </div>
           {shown.map((stop, k) => {
             const index = start + k;
             const cls = index === progress.target ? "is-yours" : index <= progress.position ? "is-passed" : "";
             return <span key={stop.code + index} className={"strip-stop " + cls} style={{ left: pct(index) + "%" }} />;
           })}
-          <span className={"strip-bus" + (progress.source === "gps" ? " is-gps" : "") + (behind || progress.position < 0 ? " is-behind" : "")}
-            style={{ left: busPct + "%" }}>
-            <BusGlyph />
+          <span className="strip-bus-track" style={{ transform: `translateX(${busPct}%)` }}>
+            <span className={"strip-bus" + (gps ? " is-gps" : "") + (behind || progress.position < 0 ? " is-behind" : "")}>
+              <BusGlyph />
+              {gps && !stale && <span key={departure.vehicle?.updated ?? ""} className="strip-bus-ping" />}
+            </span>
           </span>
         </div>
         <div className="strip-labels">

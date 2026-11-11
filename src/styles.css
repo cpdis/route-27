@@ -14,6 +14,8 @@
   --accent-soft: #e4f4eb;
   --ring: #0b805f;
   --shadow: 0 2px 10px rgba(28, 60, 44, .07);
+  --ease-out: cubic-bezier(.23,1,.32,1);       /* responses, entrances */
+  --ease-in-out: cubic-bezier(.77,0,.175,1);   /* things moving on screen */
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -33,7 +35,7 @@
   }
 }
 *,*::before,*::after { box-sizing: border-box; }
-html { background: var(--bg); -webkit-text-size-adjust: 100%; }
+html { background: var(--bg); -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
 body {
   margin: 0;
   min-height: 100vh;
@@ -44,8 +46,8 @@ body {
   -webkit-font-smoothing: antialiased;
   font-variant-numeric: tabular-nums;
 }
-button,a { -webkit-tap-highlight-color: transparent; }
-button { font: inherit; cursor: pointer; color: inherit; }
+button,a { touch-action: manipulation; }
+button { font: inherit; cursor: pointer; color: inherit; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 a { color: inherit; }
 button:focus-visible,a:focus-visible {
   outline: 3px solid var(--ring);
@@ -85,7 +87,7 @@ button:disabled { cursor: wait; }
 .stop-option {
   border: 1px solid transparent; background: transparent; border-radius: 13px;
   text-align: left; padding: 11px 13px; min-height: 74px;
-  transition: transform 140ms cubic-bezier(.23,1,.32,1), background-color 140ms ease, box-shadow 140ms ease;
+  transition: transform 140ms var(--ease-out), background-color 140ms ease, box-shadow 140ms ease;
 }
 .stop-option.is-selected {
   background: var(--surface-raised); border-color: var(--line); box-shadow: var(--shadow);
@@ -110,9 +112,10 @@ button:disabled { cursor: wait; }
   width: 44px; height: 44px; flex: none; display: grid; place-items: center;
   border: 1px solid var(--line); background: var(--surface); border-radius: 13px;
   color: var(--muted);
-  transition: transform 140ms cubic-bezier(.23,1,.32,1), color 140ms ease;
+  transition: transform 140ms var(--ease-out), color 140ms ease, opacity 140ms ease;
 }
-.refresh-button svg { display: block; }
+/* Each tap turns the arrow once more; a transition, so quick repeat taps retarget instead of restarting. */
+.refresh-button svg { display: block; transition: transform 450ms var(--ease-out); }
 .refresh-button:active { transform: scale(.96); }
 .refresh-button:disabled { opacity: .6; }
 .feedback {
@@ -188,7 +191,8 @@ button:disabled { cursor: wait; }
 .footer-light.is-warning{background:#c59341; }
 .footer-note{font-size:11px;color:var(--faint);margin-top:6px; }
 .footer-links {display:flex;flex-direction:column;align-items:flex-end;gap:6px;white-space:nowrap; }
-.footer-link {display:inline-flex;align-items:center;gap:4px;color:var(--accent);font-size:12px;text-decoration:none;font-weight:700; }
+.footer-link {display:inline-flex;align-items:center;gap:4px;color:var(--accent);font-size:12px;text-decoration:none;font-weight:700;transition:opacity 140ms ease; }
+.footer-link:active, .alert-title:active { opacity: .6; }
 .footer-source {color:var(--muted);font-weight:500;font-size:11px; }
 .footer-disclosure{font-size:11px;line-height:1.5;color:var(--faint);margin:19px 0 0; }
 @media (max-width:390px){
@@ -210,7 +214,7 @@ button:disabled { cursor: wait; }
   .footer-link:hover { text-decoration:underline;text-underline-offset:2px; }
 }
 @media (prefers-reduced-motion:reduce) {
-  .stop-option,.refresh-button {transition:none;}
+  .stop-option,.refresh-button,.refresh-button svg {transition:none;}
 }
 /* ---- Leave-by cue (inside the hero) ---- */
 .leave {
@@ -218,6 +222,7 @@ button:disabled { cursor: wait; }
   margin: -8px 0 18px; padding: 9px 12px;
   border-radius: 12px; background: rgba(255,255,255,.13);
   color: #fff; font-size: 14px; line-height: 1.3;
+  transition: background-color 200ms ease;
 }
 .leave svg { flex: none; color: #a5ffc9; }
 .leave strong { font-weight: 760; letter-spacing: -.015em; }
@@ -234,7 +239,11 @@ button:disabled { cursor: wait; }
   display: flex; align-items: flex-start; gap: 10px;
   border: 1px solid var(--line); border-radius: 13px;
   padding: 10px 8px 10px 13px; background: var(--surface);
+  transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out);
 }
+/* Exit faster than enter: the person already decided. */
+.alert.is-leaving { opacity: 0; transform: scale(.98); transition-duration: 150ms; pointer-events: none; }
+@starting-style { .alert { opacity: 0; transform: translateY(-4px); } }
 .alert.is-active { border-color: #d3a357; background: #fff7e9; color: #704c14; }
 @media (prefers-color-scheme: dark) {
   .alert.is-active { background: #332b1e; border-color: #6b5533; color: #f0d9ac; }
@@ -246,7 +255,9 @@ button:disabled { cursor: wait; }
 .alert-close {
   flex: none; width: 32px; height: 32px; display: grid; place-items: center;
   border: 0; background: transparent; border-radius: 9px; color: var(--muted);
+  transition: transform 140ms var(--ease-out), color 140ms ease;
 }
+.alert-close:active { transform: scale(.9); }
 
 /* ---- Where's the bus ---- */
 .tracker { margin-top: 4px; }
@@ -260,7 +271,12 @@ button:disabled { cursor: wait; }
   position: absolute; left: 0; right: 0; top: 50%; height: 4px; margin-top: -2px;
   border-radius: 4px; background: var(--line); overflow: hidden;
 }
-.strip-done { height: 100%; background: var(--accent); opacity: .45; border-radius: 4px; transition: width 600ms cubic-bezier(.23,1,.32,1); }
+/* Progress and bus move with transform only. Percentages in translateX are of the element's own
+   width, so both are full-width layers slid along the strip. */
+.strip-done {
+  height: 100%; background: var(--accent); opacity: .45; border-radius: 4px;
+  transform: translateX(-100%); transition: transform 400ms var(--ease-in-out);
+}
 .strip-stop {
   position: absolute; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px;
   border-radius: 50%; background: var(--surface); border: 2px solid var(--faint);
@@ -271,19 +287,24 @@ button:disabled { cursor: wait; }
   border: 3px solid var(--accent); background: var(--surface);
   box-shadow: 0 0 0 4px var(--accent-soft);
 }
+.strip-bus-track {
+  position: absolute; inset: 0; pointer-events: none;
+  transition: transform 400ms var(--ease-in-out);
+}
 .strip-bus {
-  position: absolute; top: 50%; width: 30px; height: 30px; margin: -15px 0 0 -15px;
+  position: absolute; left: 0; top: 50%; width: 30px; height: 30px; margin: -15px 0 0 -15px;
   display: grid; place-items: center; border-radius: 50%;
   background: var(--ink); color: var(--bg);
   box-shadow: 0 2px 8px rgba(0,0,0,.18);
-  transition: left 600ms cubic-bezier(.23,1,.32,1);
+  transition: transform 400ms var(--ease-in-out);
 }
 .strip-bus.is-gps { background: #087b5b; color: #fff; }
-.strip-bus.is-gps::after {
-  content: ""; position: absolute; inset: -4px; border-radius: 50%;
-  border: 2px solid #0b9e72; opacity: 0; animation: bus-ping 2.4s ease-out infinite;
+/* One ping per fresh GPS fix (the element is re-keyed on each fix), not a pulse forever. */
+.strip-bus-ping {
+  position: absolute; inset: -4px; border-radius: 50%;
+  border: 2px solid #0b9e72; opacity: 0; animation: bus-ping 1.2s var(--ease-out) 2;
 }
-.strip-bus.is-behind { margin-left: -24px; }
+.strip-bus.is-behind { transform: translateX(-9px); }
 @keyframes bus-ping { 0% { transform: scale(.85); opacity: .7; } 80%,100% { transform: scale(1.5); opacity: 0; } }
 .strip-labels {
   display: flex; justify-content: space-between; gap: 12px; margin-top: 6px;
@@ -301,12 +322,16 @@ button:disabled { cursor: wait; }
   flex: none; min-width: 64px; height: 36px; padding: 0 14px;
   border: 1px solid var(--line); border-radius: 11px; background: var(--subtle);
   font-size: 13px; font-weight: 700; color: var(--accent);
+  transition: transform 140ms var(--ease-out), color 140ms ease;
 }
+.map-toggle:active { transform: scale(.97); }
 .route-map {
   height: 280px; margin-top: 12px; border-radius: 13px; overflow: hidden;
   border: 1px solid var(--line); background: var(--subtle);
   z-index: 0; isolation: isolate;
+  transition: opacity 200ms var(--ease-out);
 }
+@starting-style { .route-map { opacity: 0; } }
 .route-map.is-loading { display: grid; place-items: center; color: var(--muted); font-size: 13px; }
 .route-map .leaflet-control-attribution { font-size: 9px; }
 /* Standard OSM tiles are busy and only come in light; quieten them so the route reads first. */
@@ -345,6 +370,10 @@ button:disabled { cursor: wait; }
   .alert-title:hover { text-decoration: underline; text-underline-offset: 2px; }
 }
 @media (prefers-reduced-motion:reduce) {
-  .strip-done, .strip-bus { transition: none; }
-  .strip-bus.is-gps::after { animation: none; }
+  /* Gentler, not nothing: keep the fades, drop movement. */
+  .strip-done, .strip-bus-track, .strip-bus, .map-toggle, .alert-close { transition: none; }
+  .strip-bus-ping { animation: none; }
+  .alert { transition: opacity 200ms ease; }
+  .alert.is-leaving { transform: none; }
+  @starting-style { .alert { transform: none; } }
 }

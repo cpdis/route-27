@@ -21,10 +21,11 @@ function initialStop(): StopId {
   } catch { /* private browsing */ }
   return Number(formatHour.format(new Date())) >= 12 ? "10091" : "10106";
 }
-function RefreshIcon() {
+function RefreshIcon({ turns }: { turns: number }) {
   return (
     <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
+      style={{ transform: `rotate(${turns * 360}deg)` }}>
       <path d="M20 11a8 8 0 1 0-2.6 6.1"/><path d="M20 4v7h-7"/>
     </svg>
   );
@@ -129,6 +130,11 @@ export default function App() {
   const [now, setNow] = useState(Date.now());
   const { feed: currentFeed, error, updating, reload } = useDepartures(stop);
   const { alerts, dismiss } = useAlerts();
+  // Only a refresh the person asked for gets visible feedback; the minute poll stays quiet.
+  const [manual, setManual] = useState(false);
+  const [turns, setTurns] = useState(0);
+  useEffect(() => { if (!updating) setManual(false); }, [updating]);
+  const refresh = () => { setManual(true); setTurns(t => t + 1); reload(); };
 
   useEffect(() => {
     try { localStorage.setItem(STOP_KEY, stop); } catch { /* optional */ }
@@ -201,9 +207,9 @@ export default function App() {
             <div className="stop-detail-label">{selected.direction} · Stop {stop}</div>
             <div className="stop-detail-name">{selected.location}</div>
           </div>
-          <button className="refresh-button" type="button" onClick={reload}
-            disabled={updating} aria-label="Refresh departures" title="Refresh departures">
-            <RefreshIcon />
+          <button className="refresh-button" type="button" onClick={refresh}
+            disabled={manual} aria-label="Refresh departures" title="Refresh departures">
+            <RefreshIcon turns={turns} />
           </button>
         </div>
 
@@ -250,7 +256,7 @@ export default function App() {
               <div className="footer-status" role="status">
                 <span className={"footer-light " + (stale || error ? "is-warning" : "")} />
                 {error ? "Connection interrupted" :
-                  updating ? "Checking Transperth…" :
+                  manual || (updating && !currentFeed) ? "Checking Transperth…" :
                   currentFeed ? updateAge(currentFeed.fetchedAt, now) : "Connecting…"}
               </div>
               <div className="footer-note">Checks every minute · Route 27 only</div>

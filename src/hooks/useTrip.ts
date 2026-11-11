@@ -30,5 +30,6 @@ export function useTrip(ref: TripRef | null | undefined): TripPayload | null {
     return () => ctrl.abort();
   }, [id]);
 
-  return trip;
+  // State lags the ref by one render when the next bus changes; never pair a departure with another trip.
+  return trip && ref && trip.tripUid === ref.uid && trip.date === ref.date ? trip : null;
 }
