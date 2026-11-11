@@ -1,0 +1,30 @@
+name: Health check
+
+# Transperth's endpoints are unofficial and change without notice. This hits the
+# live site once a day and fails (which emails the repo owner) if departures,
+# the trip stop list or service notices stop coming through.
+on:
+  schedule:
+    - cron: "30 0 * * *" # 08:30 Perth, when route 27 is busy
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Site to check"
+        required: false
+        default: "https://27.cpd.dev"
+
+permissions:
+  contents: read
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+      - run: node scripts/health-check.mjs
+        env:
+          BASE_URL: ${{ inputs.base_url || vars.HEALTH_BASE_URL || 'https://27.cpd.dev' }}

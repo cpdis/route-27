@@ -1,67 +1,31 @@
-/** @jsxImportSource https://esm.sh/react@18.2.0 */
-import React, { useEffect, useMemo, useRef, useState } from "https://esm.sh/react@18.2.0";
-import { createRoot } from "https://esm.sh/react-dom@18.2.0/client?deps=react@18.2.0";
+import { useEffect, useMemo, useState } from "react";
+import type { Departure } from "../lib/transperth";
+import AlertBanner from "./components/AlertBanner";
+import LeaveCue from "./components/LeaveCue";
+import RouteStrip from "./components/RouteStrip";
+import { STOPS, STOP_IDS, isStop, type StopId } from "./config";
+import { useAlerts } from "./hooks/useAlerts";
+import { useDepartures } from "./hooks/useDepartures";
+import { useTrip } from "./hooks/useTrip";
+import { countdownLabel, formatDate, formatHour, formatLocalTime, minuteCount, updateAge } from "./lib/format";
+import { leaveCue, type LeaveCue as Cue } from "./lib/leave";
 
-type StopId = "10106" | "10091";
-type Departure = {
-  id: string;
-  route: "27";
-  destination: string;
-  scheduled: string;
-  expected: string;
-  live: boolean;
-  delayMinutes: number | null;
-  status: string;
-};
-type Feed = {
-  stop: StopId;
-  stopName: string;
-  direction: string;
-  destination: string;
-  fetchedAt: string;
-  departures: Departure[];
-  stale?: boolean;
-  warning?: string;
-};
-const STOPS = {
-  "10106": { place: "Subiaco", direction: "To Perth", location: "Bagot Rd · before Rowland St" },
-  "10091": { place: "Perth CBD", direction: "To Subiaco", location: "St Georges Tce · Stand 32" },
-} as const;
-const formatLocalTime = new Intl.DateTimeFormat("en-AU", {
-  hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Australia/Perth",
-});
-const formatDate = new Intl.DateTimeFormat("en-AU", {
-  weekday: "short", day: "numeric", month: "short", timeZone: "Australia/Perth",
-});
-const formatHour = new Intl.DateTimeFormat("en-GB", {
-  hour: "2-digit", hourCycle: "h23", timeZone: "Australia/Perth",
-});
+const STOP_KEY = "subiaco-route27-stop";
+
 function initialStop(): StopId {
   const param = new URLSearchParams(window.location.search).get("stop");
-  if (param === "10106" || param === "10091") return param;
+  if (isStop(param)) return param;
   try {
-    const saved = localStorage.getItem("subiaco-route27-stop");
-    if (saved === "10106" || saved === "10091") return saved;
+    const saved = localStorage.getItem(STOP_KEY);
+    if (isStop(saved)) return saved;
   } catch { /* private browsing */ }
   return Number(formatHour.format(new Date())) >= 12 ? "10091" : "10106";
 }
-function minuteCount(date: string, now: number): number {
-  return Math.max(0, Math.ceil((Date.parse(date) - now) / 60_000));
-}
-function countdownLabel(date: string, now: number): string {
-  const minutes = minuteCount(date, now);
-  return minutes < 1 ? "Due now" : minutes + " min";
-}
-function updateAge(fetchedAt: string, now: number): string {
-  const seconds = Math.max(0, Math.floor((now - Date.parse(fetchedAt)) / 1000));
-  if (seconds < 60) return "Updated just now";
-  const minutes = Math.floor(seconds / 60);
-  return "Updated " + minutes + " min ago";
-}
-function RefreshIcon() {
+function RefreshIcon({ turns }: { turns: number }) {
   return (
     <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
+      style={{ transform: `rotate(${turns * 360}deg)` }}>
       <path d="M20 11a8 8 0 1 0-2.6 6.1"/><path d="M20 4v7h-7"/>
     </svg>
   );
@@ -79,8 +43,9 @@ function StatusBadge({ departure, stale }: { departure: Departure; stale: boolea
   const text = stale ? "OLD DATA" : departure.live ? "LIVE" : "SCHEDULED";
   return <span className={"status-pill " + cls}><i className="status-dot" aria-hidden="true" />{text}</span>;
 }
-function NextDeparture({ departure, now, stale, loading }: {
+function NextDeparture({ departure, now, stale, loading, cue, walkMinutes }: {
   departure: Departure | undefined; now: number; stale: boolean; loading: boolean;
+  cue: Cue | null; walkMinutes: number;
 }) {
   const late = Boolean(departure?.live && departure.delayMinutes != null && departure.delayMinutes !== 0);
   return (
@@ -95,6 +60,7 @@ function NextDeparture({ departure, now, stale, loading }: {
             <span className="hero-digits">{minuteCount(departure.expected, now)}</span>
             <span className="hero-minutes">min</span>
           </div>
+          <LeaveCue cue={cue} walkMinutes={walkMinutes} />
           <div className="hero-divider" />
           <div className="hero-bottom">
             <div className="hero-bottom-left">
@@ -129,18 +95,21 @@ function DepartureItem({ departure, now, stale }: {
   const mins = minuteCount(departure.expected, now);
   const late = Boolean(departure.live && departure.delayMinutes != null && departure.delayMinutes !== 0);
   const diff = departure.delayMinutes ?? 0;
+  const cancelled = Boolean(departure.cancelled);
   return (
-    <li className="departure-row">
-      <div className="row-count" aria-label={countdownLabel(departure.expected, now)}>
+    <li className={"departure-row" + (cancelled ? " is-cancelled" : "")}>
+      <div className="row-count" aria-label={cancelled ? "Cancelled" : countdownLabel(departure.expected, now)}>
         <span className="row-count-num">{mins}</span><span className="row-count-unit">min</span>
       </div>
       <div>
         <div className="row-destination">{departure.destination}</div>
         <div className="row-details">
-          <span className={departure.live && !stale ? "row-live" : ""}>
-            {departure.live && !stale ? "● Live" : "Scheduled"}
-          </span>
-          {late && !stale &&
+          {cancelled ? <span className="row-cancelled">Cancelled</span> : (
+            <span className={departure.live && !stale ? "row-live" : ""}>
+              {departure.live && !stale ? "● Live" : "Scheduled"}
+            </span>
+          )}
+          {late && !stale && !cancelled &&
             <span className="row-delay">{diff > 0 ? "+" : ""}{diff} min</span>}
         </div>
       </div>
@@ -155,88 +124,44 @@ function DepartureItem({ departure, now, stale }: {
     </li>
   );
 }
-function App() {
+
+export default function App() {
   const [stop, setStop] = useState<StopId>(initialStop);
-  const [feed, setFeed] = useState<Feed | null>(null);
-  const [error, setError] = useState("");
-  const [updating, setUpdating] = useState(true);
   const [now, setNow] = useState(Date.now());
-  const reloadRef = useRef<() => void>(() => {});
+  const { feed: currentFeed, error, updating, reload } = useDepartures(stop);
+  const { alerts, dismiss } = useAlerts();
+  // Only a refresh the person asked for gets visible feedback; the minute poll stays quiet.
+  const [manual, setManual] = useState(false);
+  const [turns, setTurns] = useState(0);
+  useEffect(() => { if (!updating) setManual(false); }, [updating]);
+  const refresh = () => { setManual(true); setTurns(t => t + 1); reload(); };
 
   useEffect(() => {
-    try { localStorage.setItem("subiaco-route27-stop", stop); } catch { /* optional */ }
+    try { localStorage.setItem(STOP_KEY, stop); } catch { /* optional */ }
     const url = new URL(location.href);
     url.searchParams.set("stop", stop);
     history.replaceState(null, "", url.pathname + url.search + url.hash);
   }, [stop]);
 
   useEffect(() => {
-    const clockTimer = window.setInterval(() => setNow(Date.now()), 15_000);
+    // 10 s keeps "leave now" honest without busy re-rendering.
+    const clockTimer = window.setInterval(() => setNow(Date.now()), 10_000);
     return () => window.clearInterval(clockTimer);
   }, []);
+  useEffect(() => { if (currentFeed) setNow(Date.now()); }, [currentFeed]);
 
-  useEffect(() => {
-    let active = true;
-    let controller: AbortController | null = null;
-    setFeed(null);
-    setError("");
-    setUpdating(true);
-    const load = async () => {
-      controller?.abort();
-      const ctrl = new AbortController();
-      controller = ctrl;
-      setUpdating(true);
-      try {
-        const response = await fetch("/api/departures?stop=" + stop, {
-          cache: "no-store", signal: ctrl.signal,
-        });
-        const payload = await response.json();
-        if (!response.ok || payload.stop !== stop || !Array.isArray(payload.departures)) {
-          throw new Error("Invalid stop-specific departure response");
-        }
-        if (!active || controller !== ctrl) return;
-        setFeed(payload);
-        setError("");
-        setNow(Date.now());
-      } catch {
-        if (!active || ctrl.signal.aborted) return;
-        setError("Live departures are temporarily unavailable.");
-      } finally {
-        if (active && controller === ctrl) setUpdating(false);
-      }
-    };
-    reloadRef.current = () => { void load(); };
-    void load();
-    const poll = window.setInterval(() => {
-      if (document.visibilityState === "visible") void load();
-    }, 60_000);
-    const foreground = () => {
-      if (document.visibilityState === "visible") void load();
-    };
-    const online = () => { void load(); };
-    document.addEventListener("visibilitychange", foreground);
-    window.addEventListener("online", online);
-    return () => {
-      active = false;
-      controller?.abort();
-      reloadRef.current = () => {};
-      window.clearInterval(poll);
-      document.removeEventListener("visibilitychange", foreground);
-      window.removeEventListener("online", online);
-    };
-  }, [stop]);
-
-  const currentFeed = feed?.stop === stop ? feed : null;
   const dataAge = currentFeed ? now - Date.parse(currentFeed.fetchedAt) : Infinity;
   const stale = Boolean(currentFeed && (currentFeed.stale || dataAge > 5 * 60_000));
   const currentDepartures = useMemo(() => (
     currentFeed?.departures || []
   ).filter(d => Number.isFinite(Date.parse(d.expected)) && Date.parse(d.expected) >= now - 30_000)
     .sort((a, b) => Date.parse(a.expected) - Date.parse(b.expected)), [currentFeed, now]);
-  const next = currentDepartures[0];
-  const following = currentDepartures.slice(1, 7);
+  const next = currentDepartures.find(d => !d.cancelled);
+  const following = currentDepartures.filter(d => d !== next).slice(0, 6);
   const loading = updating && !currentFeed;
   const selected = STOPS[stop];
+  const cue = useMemo(() => leaveCue(currentDepartures, selected.walkMinutes, now), [currentDepartures, selected.walkMinutes, now]);
+  const trip = useTrip(next?.trip);
   const officialUrl = "https://136213.mobi/RealTime/QRRealTimeStopResults.aspx?SN=" + stop;
   return (
     <div className="route-app">
@@ -261,7 +186,7 @@ function App() {
         </header>
 
         <nav className="stop-selector" aria-label="Select departure stop">
-          {(["10106", "10091"] as StopId[]).map(id => {
+          {STOP_IDS.map(id => {
             const item = STOPS[id];
             return (
               <button key={id} type="button" className={"stop-option " + (id === stop ? "is-selected" : "")}
@@ -282,27 +207,33 @@ function App() {
             <div className="stop-detail-label">{selected.direction} · Stop {stop}</div>
             <div className="stop-detail-name">{selected.location}</div>
           </div>
-          <button className="refresh-button" type="button" onClick={() => reloadRef.current()}
-            disabled={updating} aria-label="Refresh departures" title="Refresh departures">
-            <RefreshIcon />
+          <button className="refresh-button" type="button" onClick={refresh}
+            disabled={manual} aria-label="Refresh departures" title="Refresh departures">
+            <RefreshIcon turns={turns} />
           </button>
         </div>
+
+        <AlertBanner alerts={alerts} onDismiss={dismiss} variant="active" />
 
         {(stale || error) && (
           <aside className="feedback" role="status">
             <span aria-hidden="true">!</span>
             <span>
-              {error || "Live updates interrupted. Displaying previously retrieved departures."}{" "}
+              {error ? error + (currentFeed ? " Showing the last departures this phone saw." : "") :
+                "Live updates interrupted. Displaying previously retrieved departures."}{" "}
               <a href={officialUrl} target="_blank" rel="noopener noreferrer">Check Transperth ↗</a>
             </span>
           </aside>
         )}
 
-        <NextDeparture departure={next} now={now} stale={stale} loading={loading} />
+        <NextDeparture departure={next} now={now} stale={stale} loading={loading}
+          cue={stale ? null : cue} walkMinutes={selected.walkMinutes} />
+
+        {next && trip && <RouteStrip trip={trip} departure={next} stopCode={stop} now={now} stale={stale} />}
 
         <section aria-labelledby="upcoming-title">
           <div className="section-heading">
-            <h2 id="upcoming-title" className="section-title">Following departures</h2>
+            <h2 id="upcoming-title" className="section-title is-square">Following departures</h2>
             <span className="section-note">PERTH LOCAL TIME</span>
           </div>
           {following.length > 0 ? (
@@ -317,13 +248,15 @@ function App() {
           )}
         </section>
 
+        <AlertBanner alerts={alerts} onDismiss={dismiss} variant="upcoming" />
+
         <footer className="footer">
           <div className="footer-row">
             <div>
               <div className="footer-status" role="status">
                 <span className={"footer-light " + (stale || error ? "is-warning" : "")} />
                 {error ? "Connection interrupted" :
-                  updating ? "Checking Transperth…" :
+                  manual || (updating && !currentFeed) ? "Checking Transperth…" :
                   currentFeed ? updateAge(currentFeed.fetchedAt, now) : "Connecting…"}
               </div>
               <div className="footer-note">Checks every minute · Route 27 only</div>
@@ -337,12 +270,10 @@ function App() {
           </div>
           <p className="footer-disclosure">
             Live = vehicle-tracked estimate. Scheduled = timetable only. Times may change.
-            Independent display using public Transperth data.
+            Independent display using public Transperth data. Map © OpenStreetMap contributors.
           </p>
         </footer>
       </main>
     </div>
   );
 }
-const node = document.getElementById("app");
-if (node) createRoot(node).render(<App />);
